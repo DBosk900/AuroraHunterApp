@@ -1,0 +1,36 @@
+{
+  "expo": {
+    "name": "Cacciatori Aurora Boreale",
+    "slug": "cacciatori-aurora-boreale",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "dark",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#050914"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": false,
+      "bundleIdentifier": "com.cacciatoriauroraboreale.app",
+      "buildNumber": "1",
+      "infoPlist": {
+        "NSPhotoLibraryUsageDescription": "Accesso alla galleria per caricare foto delle aurore boreali.",
+        "NSCameraUsageDescription": "Accesso alla fotocamera per scattare foto.",
+        "NSMicrophoneUsageDescription": "Accesso al microfono per registrare podcast."
+      }
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#050914"
+      },
+      "package": "com.cacciatoriauroraboreale.app"
+    },
+    "newArchEnabled": false
+  }
+}

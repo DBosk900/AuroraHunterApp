@@ -1,0 +1,57 @@
+workflows:
+  ios-production:
+    name: Aurora Hunter iOS
+    max_build_duration: 90
+    instance_type: mac_mini_m2
+
+    integrations:
+      app_store_connect: Codemagic
+
+    environment:
+      xcode: 16.2
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.cacciatoriauroraboreale.app
+      node: 18.17.0
+      vars:
+        BUNDLE_ID: com.cacciatoriauroraboreale.app
+        APPLE_TEAM_ID: "QHF2W2MC27"
+        APP_STORE_CONNECT_ISSUER_ID: "7d659968-d65a-4bdc-9765-e813df7e599b"
+        APP_STORE_CONNECT_KEY_IDENTIFIER: "6BQ423A8TD"
+
+    scripts:
+      - name: Install dependencies
+        script: |
+          npm install --legacy-peer-deps
+
+      - name: Expo prebuild
+        script: |
+          npx expo prebuild --platform ios --clean
+
+      - name: Fix NODE_BINARY
+        script: |
+          NODE=$(which node)
+          if ! grep -q "NODE_BINARY" ios/Podfile; then
+            echo "ENV[\"NODE_BINARY\"] = \"$NODE\"" | cat - ios/Podfile > /tmp/pf && mv /tmp/pf ios/Podfile
+          fi
+          cd ios && pod install
+
+      - name: Set up code signing
+        script: |
+          xcode-project use-profiles
+
+      - name: Build iOS
+        script: |
+          export NODE_BINARY=$(which node)
+          xcode-project build-ipa \
+            --workspace "ios/AuroraHunter.xcworkspace" \
+            --scheme "AuroraHunter"
+
+    artifacts:
+      - build/ios/ipa/*.ipa
+
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        submit_to_app_store: false
