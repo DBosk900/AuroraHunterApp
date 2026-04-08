@@ -44,10 +44,10 @@ workflows:
       - name: Build iOS
         script: |
           export NODE_BINARY=$(which node)
-          cat > /Users/builder/export_options.plist << EOF
-          <?xml version="1.0" encoding="UTF-8"?>
-          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-          <plist version="1.0">
+          python3 -c "
+          content = '''<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+          <!DOCTYPE plist PUBLIC \"-//Apple//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+          <plist version=\"1.0\">
           <dict>
             <key>method</key>
             <string>app-store-connect</string>
@@ -56,8 +56,9 @@ workflows:
             <key>signingStyle</key>
             <string>manual</string>
           </dict>
-          </plist>
-          EOF
+          </plist>'''
+          open('/Users/builder/export_options.plist', 'w').write(content)
+          "
           xcode-project build-ipa \
             --workspace "ios/CacciatoriAuroraBoreale.xcworkspace" \
             --scheme "CacciatoriAuroraBoreale" \
