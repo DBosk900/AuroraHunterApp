@@ -26,6 +26,7 @@ workflows:
 
       - name: Expo prebuild
         script: |
+          chmod +x node_modules/.bin/expo
           npx expo prebuild --platform ios --clean
 
       - name: Fix NODE_BINARY
