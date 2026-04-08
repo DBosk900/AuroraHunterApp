@@ -44,9 +44,13 @@ workflows:
       - name: Build iOS
         script: |
           export NODE_BINARY=$(which node)
+          WORKSPACE=$(find . -name "*.xcworkspace" -not -path "*/node_modules/*" -not -path "*project.xcworkspace" | head -1)
+          SCHEME=$(find . -name "*.xcscheme" -not -path "*/node_modules/*" | head -1 | xargs basename | sed 's/.xcscheme//')
+          echo "Workspace: $WORKSPACE"
+          echo "Scheme: $SCHEME"
           xcode-project build-ipa \
-            --workspace "ios/AuroraHunter.xcworkspace" \
-            --scheme "AuroraHunter"
+            --workspace "$WORKSPACE" \
+            --scheme "$SCHEME"
 
     artifacts:
       - build/ios/ipa/*.ipa
