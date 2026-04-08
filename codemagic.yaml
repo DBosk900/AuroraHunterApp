@@ -44,13 +44,24 @@ workflows:
       - name: Build iOS
         script: |
           export NODE_BINARY=$(which node)
-          WORKSPACE=$(find . -name "*.xcworkspace" -not -path "*/node_modules/*" -not -path "*project.xcworkspace" | head -1)
-          SCHEME=$(find . -name "*.xcscheme" -not -path "*/node_modules/*" | head -1 | xargs basename | sed 's/.xcscheme//')
-          echo "Workspace: $WORKSPACE"
-          echo "Scheme: $SCHEME"
+          cat > /Users/builder/export_options.plist << EOF
+          <?xml version="1.0" encoding="UTF-8"?>
+          <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+          <plist version="1.0">
+          <dict>
+            <key>method</key>
+            <string>app-store-connect</string>
+            <key>teamID</key>
+            <string>QHF2W2MC27</string>
+            <key>signingStyle</key>
+            <string>manual</string>
+          </dict>
+          </plist>
+          EOF
           xcode-project build-ipa \
-            --workspace "$WORKSPACE" \
-            --scheme "$SCHEME"
+            --workspace "ios/CacciatoriAuroraBoreale.xcworkspace" \
+            --scheme "CacciatoriAuroraBoreale" \
+            --export-options-plist /Users/builder/export_options.plist
 
     artifacts:
       - build/ios/ipa/*.ipa
